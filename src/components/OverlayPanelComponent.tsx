@@ -26,11 +26,11 @@ const OverlayPanelComponent: React.FC<OverlayPanelComponentProps> = ({ onValueSu
             <OverlayPanel ref={op}>
                 <div className='body'>
                     <InputText
-                        value={value ?? ''}
+                        value={value !== null ? String(value) : ''}
                         onChange={(e) => {
                             const newValue = e.target.value;
                             const parsedValue = newValue === '' ? null : parseFloat(newValue);
-                            setValue(isNaN(parsedValue) ? null : parsedValue);
+                            setValue(parsedValue !== null && !isNaN(parsedValue) ? parsedValue : null);
                         }}
                     />
                     <Button label="Submit" className='button' onClick={handleSubmit} />

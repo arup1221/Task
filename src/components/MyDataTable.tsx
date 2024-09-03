@@ -50,7 +50,7 @@ const MyDataTable = () => {
                     const items = response.data.data;
                     for (let j = 0; j < Math.min(rows, value - startIndex); j++) {
                         if (items[j]) {
-                            newSelectedIDs.add(items[j].id);
+                            newSelectedIDs.add(items[j].id as number);
                         }
                     }
                     setSelectedIDs(newSelectedIDs);
@@ -59,11 +59,11 @@ const MyDataTable = () => {
     };
 
     const handleSelectionChange = (e: any) => {
-        const newSelectedIDs = new Set(e.value.map((item: any) => item.id));
+        const newSelectedIDs = new Set<number>(e.value.map((item: any) => item.id as number));
         setSelectedIDs(newSelectedIDs);
     };
 
-    const isSelected = (rowData: any) => selectedIDs.has(rowData.id);
+    const isSelected = (rowData: any) => selectedIDs.has(rowData.id as number);
 
     return (
         <>
