@@ -10,14 +10,24 @@ interface PageChangeEvent {
     rows: number;
 }
 
+interface Artwork {
+    id: number;
+    title: string;
+    place_of_origin: string;
+    artist_display: string;
+    inscriptions: string;
+    date_start: string;
+    date_end: string;
+}
+
 const MyDataTable = () => {
-    const [data, setData] = useState<any[]>([]);
+    const [data, setData] = useState<Artwork[]>([]);
     const [totalRecords, setTotalRecords] = useState(0);
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(12);
     const [loading, setLoading] = useState(false);
     const [selectedIDs, setSelectedIDs] = useState<Set<number>>(new Set());
-    const [currentPageData, setCurrentPageData] = useState<any[]>([]);
+    const [currentPageData, setCurrentPageData] = useState<Artwork[]>([]);
 
     useEffect(() => {
         fetchData(first, rows);
@@ -39,8 +49,6 @@ const MyDataTable = () => {
         }
     };
 
-   
-    
     const handlePageChange = (event: PageChangeEvent) => {
         setFirst(event.first);
         setRows(event.rows);
@@ -54,10 +62,10 @@ const MyDataTable = () => {
             const startIndex = i * rows;
             axios.get(`https://api.artic.edu/api/v1/artworks?page=${i + 1}&limit=${rows}`)
                 .then(response => {
-                    const items = response.data.data;
+                    const items: Artwork[] = response.data.data;
                     for (let j = 0; j < Math.min(rows, value - startIndex); j++) {
                         if (items[j]) {
-                            newSelectedIDs.add(items[j].id as number);
+                            newSelectedIDs.add(items[j].id);
                         }
                     }
                     setSelectedIDs(newSelectedIDs);
@@ -65,12 +73,12 @@ const MyDataTable = () => {
         }
     };
 
-    const handleSelectionChange = (e: { value: number[] }) => {
-        const newSelectedIDs = new Set<number>(e.value.map((item: number) => item.id as number));
+    const handleSelectionChange = (e: { value: Artwork[] }) => {
+        const newSelectedIDs = new Set<number>(e.value.map((item) => item.id));
         setSelectedIDs(newSelectedIDs);
     };
 
-    const isSelected = (rowData: number) => selectedIDs.has(rowData.id as number);
+    const isSelected = (rowData: Artwork) => selectedIDs.has(rowData.id);
 
     return (
         <>
