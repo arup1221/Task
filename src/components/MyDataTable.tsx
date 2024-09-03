@@ -5,6 +5,11 @@ import axios from 'axios';
 import OverlayPanelComponent from './OverlayPanelComponent';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
+interface PageChangeEvent {
+    first: number;
+    rows: number;
+}
+
 const MyDataTable = () => {
     const [data, setData] = useState<any[]>([]);
     const [totalRecords, setTotalRecords] = useState(0);
@@ -34,7 +39,9 @@ const MyDataTable = () => {
         }
     };
 
-    const handlePageChange = (event: any) => {
+   
+    
+    const handlePageChange = (event: PageChangeEvent) => {
         setFirst(event.first);
         setRows(event.rows);
     };
@@ -58,12 +65,12 @@ const MyDataTable = () => {
         }
     };
 
-    const handleSelectionChange = (e: any) => {
-        const newSelectedIDs = new Set<number>(e.value.map((item: any) => item.id as number));
+    const handleSelectionChange = (e: { value: number[] }) => {
+        const newSelectedIDs = new Set<number>(e.value.map((item: number) => item.id as number));
         setSelectedIDs(newSelectedIDs);
     };
 
-    const isSelected = (rowData: any) => selectedIDs.has(rowData.id as number);
+    const isSelected = (rowData: number) => selectedIDs.has(rowData.id as number);
 
     return (
         <>
