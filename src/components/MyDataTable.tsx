@@ -74,11 +74,27 @@ const MyDataTable = () => {
     };
 
     const handleSelectionChange = (e: { value: Artwork[] }) => {
-        const newSelectedIDs = new Set<number>(e.value.map((item) => item.id));
+        const newSelectedIDs = new Set<number>(selectedIDs);
+
+        // Add newly selected items
+        e.value.forEach((item) => {
+            newSelectedIDs.add(item.id);
+        });
+
+        // Identify deselected items by comparing with the previously selected items
+        const deselectedIDs = currentPageData
+            .filter(item => !e.value.some(selectedItem => selectedItem.id === item.id))
+            .map(item => item.id);
+
+        // Remove deselected items
+        deselectedIDs.forEach(id => {
+            newSelectedIDs.delete(id);
+        });
+
         setSelectedIDs(newSelectedIDs);
     };
 
-    const isSelected = (rowData: Artwork) => selectedIDs.has(rowData.id);
+    // const isSelected = (rowData: Artwork) => selectedIDs.has(rowData.id);
 
     return (
         <>
@@ -93,7 +109,7 @@ const MyDataTable = () => {
                     paginatorPosition="bottom"
                     rows={rows}
                     selectionMode="checkbox"
-                    selection={currentPageData.filter((item) => isSelected(item))}
+                    selection={data.filter(item => selectedIDs.has(item.id))}
                     totalRecords={totalRecords}
                     onPage={handlePageChange}
                     first={first}
