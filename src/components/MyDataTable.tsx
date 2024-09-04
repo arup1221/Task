@@ -76,17 +76,14 @@ const MyDataTable = () => {
     const handleSelectionChange = (e: { value: Artwork[] }) => {
         const newSelectedIDs = new Set<number>(selectedIDs);
 
-        // Add newly selected items
         e.value.forEach((item) => {
             newSelectedIDs.add(item.id);
         });
 
-        // Identify deselected items by comparing with the previously selected items
         const deselectedIDs = currentPageData
             .filter(item => !e.value.some(selectedItem => selectedItem.id === item.id))
             .map(item => item.id);
 
-        // Remove deselected items
         deselectedIDs.forEach(id => {
             newSelectedIDs.delete(id);
         });
